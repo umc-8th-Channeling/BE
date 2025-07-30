@@ -1,6 +1,7 @@
 package channeling.be.domain.video.domain.repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import channeling.be.domain.channel.domain.Channel;
 import channeling.be.domain.video.domain.Video;
@@ -28,4 +29,7 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
 			"AND r.id is null " +
 			"order by v.view desc ")
 	Page<Video> findAllRecommendationByChannel(Long channelId, Pageable pageable);
+
+	Optional<Video> findByYoutubeVideoId(String youtubeVideoId);
+
 }
