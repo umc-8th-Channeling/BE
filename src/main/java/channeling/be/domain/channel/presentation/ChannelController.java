@@ -33,7 +33,6 @@ public class ChannelController implements ChannelSwagger{
 	private final VideoService videoService;
 	private final ChannelService channelService;
 
-
 	// TODO: 추후 유저 + 채널 연관 관계 확인 로직 필요
 	@Override
 	@GetMapping("/{channel-id}/videos")
@@ -80,6 +79,16 @@ public class ChannelController implements ChannelSwagger{
 	@GetMapping("{channel-id}")
 	public ApiResponse<ChannelResDTO.ChannelInfo> getChannel(@PathVariable("channel-id") Long channelId,
                                                              @LoginMember Member loginMember) {
-		 return ApiResponse.onSuccess(ChannelConverter.toChannelResDto(channelService.getChannel(channelId, loginMember)));
-	}
+        return ApiResponse.onSuccess(ChannelConverter.toChannelResDto(channelService.getChannel(channelId, loginMember)));
+    }
+
+    @Override
+    @GetMapping("/{channel-id}/recommended-videos")
+    public ApiResponse<ChannelResDTO.PageDto> getRecommendedChannelVideos(@PathVariable("channel-id") Long channelId,
+                                                                      @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                                                      @LoginMember Member loginMember) {
+        return ApiResponse.onSuccess(ChannelConverter.toVideoList(
+                videoService.getRecommendedVideos(channelId, page - 1, size, loginMember)));
+    }
 }
